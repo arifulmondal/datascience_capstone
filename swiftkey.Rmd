@@ -352,41 +352,20 @@ Most frequently occurred words (uni-gram, bi-gram and tri-gram) are shown in the
 #findMostFreqTerms(dtm)
 ```
 
+#### Unigram: Most Frequently Occured Words 
 
 ```{r}
+# Unigram
 uni_token <- function(x) {NGramTokenizer(x, Weka_control(min = 1, max = 1))}
-bi_token <- function(x) {NGramTokenizer(x, Weka_control(min = 2, max = 2))}
-tri_token <- function(x) {NGramTokenizer(x, Weka_control(min = 3, max = 3))}
-
 uni_tdm <- TermDocumentMatrix(myCorpus, control = list(tokenize = uni_token))
 uni_tdm <- removeSparseTerms(uni_tdm, 0.95)
-bi_tdm <- TermDocumentMatrix(myCorpus, control = list(tokenize = bi_token))
-tri_tdm <- TermDocumentMatrix(myCorpus, control = list(tokenize = tri_token))
-
-
 uni_corpus <- findFreqTerms(uni_tdm,lowfreq = 20)
-bi_corpus <- findFreqTerms(bi_tdm,lowfreq = 10)
-tri_corpus <- findFreqTerms(tri_tdm,lowfreq = 5)
-
 uni_corpus_freq <- rowSums(as.matrix(uni_tdm[uni_corpus,]))
 uni_corpus_freq <- data.frame(word=names(uni_corpus_freq), frequency=uni_corpus_freq)
-bi_corpus_freq <- rowSums(as.matrix(bi_tdm[bi_corpus,]))
-bi_corpus_freq <- data.frame(word=names(bi_corpus_freq), frequency=bi_corpus_freq)
-tri_corpus_freq <- rowSums(as.matrix(tri_tdm[tri_corpus,]))
-tri_corpus_freq <- data.frame(word=names(tri_corpus_freq), frequency=tri_corpus_freq)
-```
-
-
-```{r, warning=FALSE, message=FALSE}
 df1<- uni_corpus_freq[order(-uni_corpus_freq$frequency),][1:20,]
-
-df2 <- bi_corpus_freq[order(-bi_corpus_freq$frequency),][1:20,] 
-
-df3<-tri_corpus_freq[order(-tri_corpus_freq$frequency),][1:20,] 
-
 ```
 
-### Unigram: Most Frequently Occured Words 
+
 
 Top 100 frequenty occured words are..
 
@@ -406,7 +385,17 @@ barplot(df1[1:20,]$freq, las = 2, names.arg = df1[1:20,]$word,
 
 ```
 
-### Bigram: Most Frequently occured "sequence of two adjacent elements"
+#### Bigram: Most Frequently occured "sequence of two adjacent elements"
+
+```{r,  warning=FALSE}
+#Bigram
+bi_token <- function(x) {NGramTokenizer(x, Weka_control(min = 2, max = 2))}
+bi_tdm <- TermDocumentMatrix(myCorpus, control = list(tokenize = bi_token))
+bi_corpus <- findFreqTerms(bi_tdm,lowfreq = 10)
+bi_corpus_freq <- rowSums(as.matrix(bi_tdm[bi_corpus,]))
+bi_corpus_freq <- data.frame(word=names(bi_corpus_freq), frequency=bi_corpus_freq)
+df2 <- bi_corpus_freq[order(-bi_corpus_freq$frequency),][1:20,] 
+```
 
 ```{r, warning=FALSE, message=FALSE}
 
@@ -422,8 +411,17 @@ ggplot(df2, aes(x = df2$word, y = frequency)) +
     theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
 
+#### Trigram: Most Frequently occured "a group of three consecutive written units such as letters, syllables, or words"
 
-### Trigram: Most Frequently occured "a group of three consecutive written units such as letters, syllables, or words"
+```{r,  warning=FALSE}
+#Trigram
+tri_token <- function(x) {NGramTokenizer(x, Weka_control(min = 3, max = 3))}
+tri_tdm <- TermDocumentMatrix(myCorpus, control = list(tokenize = tri_token))
+tri_corpus <- findFreqTerms(tri_tdm,lowfreq = 5)
+tri_corpus_freq <- rowSums(as.matrix(tri_tdm[tri_corpus,]))
+tri_corpus_freq <- data.frame(word=names(tri_corpus_freq), frequency=tri_corpus_freq)
+df3<-tri_corpus_freq[order(-tri_corpus_freq$frequency),][1:20,] 
+```
 
 ```{r, warning=FALSE, message=FALSE}
 
